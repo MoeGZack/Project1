@@ -21,13 +21,18 @@ class App():
             password=config["Database"]["password"],
             decode_responses=True)
         
+        # Test the connection
         self.redis_client.ping()
         print("Redis connection details:")
         print(f"Host: {config['Database']['host']}")
         print(f"Port: {config['Database']['port']}")
         print("Connected to Redis successfully!")
+        #Retrieve Information within DB
 
+        
+    # Retrieve Information within DB
     def getMissionData(self, key):
+        
         keys=list(self.redis_client.scan_iter())
         value=self.redis_client.json().get(key)
         if not keys:
@@ -39,4 +44,4 @@ class App():
 if __name__ == "__main__":
         app = App()
         app.setup()
-        app.getMissionData("Mission1")
+        app.getMissionData("Mission1") # Example key to retrieve mission data
