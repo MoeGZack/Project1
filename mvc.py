@@ -1,5 +1,5 @@
 from app import *
-from report import *
+from Missionreport import *
 import tkinter as tk
 from tkinter import ttk
 
@@ -43,6 +43,7 @@ class Controller:
     def __init__(self, view, model):
         self.__view = view
         self.__model = model
+    
         
 
     def run(self):
@@ -92,14 +93,32 @@ class Controller:
         self.__view.StatusLbl.config(text=txt)
         
 class Model:
-    App=App()
-    App.setup()
-
-    def list_mission_keys(self):
-        return list(App().redis_client.scan_iter(match="Mission*"))
-
     
+    def __init__(self):
+        self.app=App()
+        self.redis=self.app.redis_client
+
+    def get_mission_data(self, key):
+        mission=self.redis.json().get(key)
+        if not mission:
+            return None
+        n1=mission["nodes"][0]
+        n2=mission["nodes"][1]
+
+        return {
+            "start_coords":[n1["x"],n1["y"]],
+            "end_coords":[n2["x"],n2["y"]],
+        }
     def health(self):
-        return {"db_ok": False, "api_ok": False}
+        db_ok=True
+        api_ok=True
+        try:
+            self.App.redis_client.ping()
+        except redis.exceptions.ConnectionError:
+            db_ok=False
+        api_ok=getattr(self.App,"api_key",False)  
+        return{"db_ok":db_ok,"api_ok":api_ok}
+    
+    
 
     

@@ -1,6 +1,7 @@
 import configparser
 import redis
 from logger import *
+import openrouteservice as ors
 
 class App():
     __instance = None
@@ -28,8 +29,7 @@ class App():
         print("Connected to Redis successfully!")
 
         #Retrieve API 
-        self.api_key = config["OpenRouteAPI"]["api_key"]
-        
+        self.ors.Client = ors.Client(API_KEY=config["OpenRouteAPI"]["api_key"])
         # Setup Logging
         self.loggers=None
         #Console Logger Initizalization
@@ -40,7 +40,7 @@ class App():
             self.__logfilename=config["Logging"]["__logfilename"]
             self.loggers=FileLogger(self.loggers,self.__logfilename)
         #DB wraps what is existing
-        if config["Logging"].get("database","FALSE")=="True":
+        if config["Logging"]["database"]=="True":
             self.loggers=DatabaseLogger(self.loggers,self.redis_client)
     
     def logging(self,Info):

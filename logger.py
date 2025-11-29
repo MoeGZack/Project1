@@ -1,8 +1,6 @@
 import datetime
 from abc import ABC, abstractmethod
 
-
-
 class Logger(ABC):
 
     @abstractmethod
@@ -23,7 +21,8 @@ class FileLogger(Logger):
         super().__init__(__loggerNext)
 
     def log_entry(self, info):
-        self.__logfile.write(str(datetime.datetime.now())+": "+info \  +"\n")
+       self.__logfile.write(str(datetime.datetime.now()) + ": " + info \
+                              + "\n")
 
 class ConsoleLogger(Logger):
     def log_entry(self, info):
