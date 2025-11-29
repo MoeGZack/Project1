@@ -19,7 +19,7 @@ class Logger(ABC):
 
 class FileLogger(Logger):
     def __init__(self,__loggerNext,__logfilename):
-        self.__logfilename=open(__logfilename, "w")
+        self.__logfile=open(__logfilename, "w")
         super().__init__(__loggerNext)
 
     def log_entry(self, info):
