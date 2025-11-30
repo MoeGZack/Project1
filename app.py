@@ -29,7 +29,7 @@ class App():
         print("Connected to Redis successfully!")
 
         #Retrieve API 
-        self.ors.Client = ors.Client(API_KEY=config["OpenRouteAPI"]["api_key"])
+        self.ors_Client = ors.Client(key=config["OpenRouteAPI"]["api_key"])
         # Setup Logging
         self.loggers=None
         #Console Logger Initizalization
@@ -42,6 +42,7 @@ class App():
         #DB wraps what is existing
         if config["Logging"]["database"]=="True":
             self.loggers=DatabaseLogger(self.loggers,self.redis_client)
+    
     
     def logging(self,Info):
         if self.loggers is None:

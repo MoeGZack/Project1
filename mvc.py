@@ -9,59 +9,52 @@ class View:
 
         self.root = tk.Tk()
         self.root.title("Mission Control")
-        self.root.geometry("800x600")
+        self.root.geometry("700x450")
 
-        self.frame = ttk.Frame(self.root)
-        self.frame.pack(fill=tk.BOTH, expand=True)
 
-        self.missionLbl = ttk.Label(self.frame, text="Mission Control Panel", font=("Helvetica", 16))
-        self.missionLbl.pack(pady=10)
+        self.missionLbl = ttk.Label(self.root, text="Mission Control Panel", font=("Helvetica", 16))
+        self.missionLbl.place(x=225, y=10)
 
-        controls = ttk.Frame(self.frame)
-        controls.pack(fill=tk.X, pady=10)
-        self.RetrieveMissionbtn = ttk.Button(controls, text="Retrieve Missions")
-        self.RetrieveMissionbtn.pack(pady=10)
-        self.GenerateBtn = ttk.Button(controls, text="Generate Report")
-        self.GenerateBtn.pack(pady=20)
+        self.RetrieveMissionbtn = ttk.Button(self.root, text="Retrieve Missions")
+        self.RetrieveMissionbtn.place(x=50, y=50)
+        self.GenerateBtn = ttk.Button(self.root, text="Generate Report")
+        self.GenerateBtn.place(x=375, y=50)
+       
+        ttk.Label(self.root, text="Select Mission:").place(x=50, y=100)
 
-        ttk.Label(self.frame, text="Select Mission:").pack(anchor="w", pady=(12,4))
-        listwrap = ttk.Frame(self.frame)
-        listwrap.pack(fill=tk.BOTH, expand=True)
-        self.MissionSelect = ttk.Label(self.frame, text="Select Mission:")
-        self.MissionSelect.pack(pady=5)
-        self.MissionList = tk.Listbox(listwrap, height=12)
-        self.MissionList.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        scrollbar = ttk.Scrollbar(listwrap, orient=tk.VERTICAL, command=self.MissionList.yview)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.MissionList.config(yscrollcommand=scrollbar.set)
-   
+        self.MissionList = tk.Listbox(self.root, height=12,width=50)
+        self.MissionList.place(x=50, y=130)
+
+        ttk.Label(self.root, text="Mission Report:").place(x=375, y=100)
+
+        self.MissionReport= tk.Text(self.root, height=12,width=50)
+        self.MissionReport.place(x=375, y=130)
+       
         self.StatusLbl = ttk.Label(self.root, text="Status: —")
-        self.StatusLbl.pack(fill=tk.X, pady=4)
-
-
+        self.StatusLbl.place(x=50, y=400)
 class Controller:
     def __init__(self, view, model):
         self.__view = view
         self.__model = model
     
         
-
     def run(self):
         self.__view.PythonGUI()
         self.__view.RetrieveMissionbtn.config(command=self.generate_MissionList)
         self.__view.GenerateBtn.config(command=self.generate_Report)
-
         self.update_status()
-
         self.__view.root.mainloop()   
     
     def generate_MissionList(self):
         keys = self.__model.list_mission_keys()
+
         n = self.__view.MissionList
         n.delete(0, tk.END)
+
         if not keys:
             self.__view.StatusLbl.config(text="Status: No Missions found.")
             return
+        
         for key in keys:
             n.insert(tk.END, key)
         self.__view.StatusLbl.config(text=f"Status: Retrieved {len(keys)} Missions.")
@@ -98,6 +91,9 @@ class Model:
         self.app=App()
         self.redis=self.app.redis_client
 
+    def list_mission_keys(self):
+        return list(self.redis.keys(match="Mission:*"))
+    
     def get_mission_data(self, key):
         mission=self.redis.json().get(key)
         if not mission:
@@ -113,10 +109,10 @@ class Model:
         db_ok=True
         api_ok=True
         try:
-            self.App.redis_client.ping()
+            self.redis.ping()
         except redis.exceptions.ConnectionError:
             db_ok=False
-        api_ok=getattr(self.App,"api_key",False)  
+        api_ok=getattr(self.app,"ors_Client")  
         return{"db_ok":db_ok,"api_ok":api_ok}
     
     

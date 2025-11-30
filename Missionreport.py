@@ -1,4 +1,3 @@
-from matplotlib.pylab import matrix
 from app import *
 
 class MissionReport:
