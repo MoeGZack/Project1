@@ -8,7 +8,7 @@ class Logger(ABC):
         pass
 
     def logging(self, info):
-        
+
         self.log_entry(info)
 
         if (self.logger_Next ==None):
@@ -27,15 +27,3 @@ class FileLogger(Logger):
     def log_entry(self, info):
        self.__logfile.write(str(datetime.datetime.now()) + ": " + info \
                               + "\n")
-
-class ConsoleLogger(Logger):
-    def log_entry(self, info):
-        print(str(datetime.datetime.now())+ ": " + info)
-
-class DatabaseLogger(Logger):
-
-    def __init__(self, _logger_Next,redis_client):
-        self.__redis_client=redis_client
-        super().__init__(_logger_Next)
-    def log_entry(self, info):
-        self.__redis_client.hset("logger",str(datetime.datetime.now()),info)

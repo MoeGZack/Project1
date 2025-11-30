@@ -32,16 +32,10 @@ class App():
         self.ors_Client = ors.Client(key=config["OpenRouteAPI"]["api_key"])
         # Setup Logging
         self.loggers=None
-        #Console Logger Initizalization
-        if config["Logging"]["console"]=="true":
-            self.loggers=ConsoleLogger(self.loggers)
         #Fle Logger Wraps Console Logger
         if config["Logging"]["file"]=="true":
             self.log_filename=config["Logging"]["log_filename"]
-            self.loggers=FileLogger(self.loggers,self.log_filename)
-        #DB wraps what is existing
-        if config["Logging"]["database"]=="true":
-            self.loggers=DatabaseLogger(self.loggers,self.redis_client)
+            self.loggers=FileLogger(self.loggers,self.log_filename) 
     
 
     def logging(self,Info):

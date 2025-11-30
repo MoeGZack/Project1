@@ -24,17 +24,16 @@ class View:
         self.importMissionbtn.place(x=200, y=50)
         self.GenerateBtn = ttk.Button(self.root, text="Generate Report")
         self.GenerateBtn.place(x=375, y=50)
-       
+       #Mission Select Output
         ttk.Label(self.root, text="Select Mission:").place(x=50, y=100)
-
         self.MissionList = tk.Listbox(self.root, height=12,width=50)
         self.MissionList.place(x=50, y=130)
 
+        #Mission Report Label And output
         ttk.Label(self.root, text="Mission Report:").place(x=375, y=100)
-
         self.MissionReport= tk.Text(self.root, height=12,width=50,wrap=tk.WORD)
         self.MissionReport.place(x=375, y=130)
-       
+       #Status Label output
         self.StatusLbl = ttk.Label(self.root, text="Status: —")
         self.StatusLbl.place(x=50, y=380)
 
@@ -45,6 +44,7 @@ class Controller:
         self.__report=MissionReport(self.__model)
     
     def run(self):
+        #Return Entries to view
         self.__view.PythonGUI()
         self.__view.RetrieveMissionbtn.config(command=self.generate_MissionList)
         self.__view.GenerateBtn.config(command=self.generate_Report)
@@ -67,6 +67,7 @@ class Controller:
         self.__view.StatusLbl.config(text=f"Status: Retrieved {len(keys)} Missions.")
 
     def import_Missions(self):
+
         file=filedialog.askopenfilename()
 
         if not file:
@@ -93,6 +94,7 @@ class Controller:
 
         
     def generate_Report(self):
+        
         Selection=self.__view.MissionList.curselection()
 
         if not Selection:
