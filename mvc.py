@@ -94,7 +94,7 @@ class Controller:
 
         
     def generate_Report(self):
-        
+
         Selection=self.__view.MissionList.curselection()
 
         if not Selection:
@@ -109,7 +109,7 @@ class Controller:
         textbox.insert(tk.END,reportText)
 
         self.__view.StatusLbl.config(text=f"Status: Mission Report generated {mission_Key}")
-
+    #Update Status of Redis DB and API depending On match cases
     def update_status(self):
         stat = self.__model.health()   
         Db_Api_status =(bool(stat["db_ok"]), bool(stat["api_ok"]))
@@ -137,6 +137,7 @@ class Model:
         App().logging("Mission Returned Succesfully:{keys}")
         return keys
 
+    #Retrieve Mission data within Json key in Redis
     def get_mission_data(self, key):
         mission=self.redis.json().get(key)
         if not mission:
@@ -151,13 +152,13 @@ class Model:
             "end_coords":[n2["x"],n2["y"]],
         }
     
-
+    #Import JSON To redis Cloud DB
     def setmission(self,key,mission_data):
         self.redis.json().set(key,"$",mission_data)
         App().logging("Mission Data Imported")
         return
     
-
+    #Check Health Status for API and Redis Connection
     def health(self):
         db_ok=True
         api_ok=True

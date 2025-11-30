@@ -26,7 +26,7 @@ class App():
             decode_responses=True)
      # Test the connection
         self.redis_client.ping()
-        print("Connected to Redis successfully!")
+        
 
         #Retrieve API 
         self.ors_Client = ors.Client(key=config["OpenRouteAPI"]["api_key"])
