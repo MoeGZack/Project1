@@ -3,3 +3,8 @@
 2025-11-29 23:01:49.488399: Mission Returned Succesfully:{keys}
 2025-11-29 23:01:52.535187: Generating Mission Report:Mission2
 2025-11-29 23:01:52.632629: Retrieved 'Mission2' Mission Data
+2025-11-29 23:23:49.777938: Redis Initialized
+2025-11-29 23:23:49.942580: Health check: Connection to DB and API is healthy
+2025-11-29 23:23:51.686560: Mission Returned Succesfully:{keys}
+2025-11-29 23:23:53.392323: Generating Mission Report:Mission2
+2025-11-29 23:23:53.487719: Retrieved 'Mission2' Mission Data

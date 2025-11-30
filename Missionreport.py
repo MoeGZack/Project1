@@ -36,4 +36,4 @@ class MissionReport:
             f"Duration: {duration:.2f}s\n"
         ]
         
-        return Report
+        return "\n".join(Report)

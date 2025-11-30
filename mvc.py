@@ -73,12 +73,14 @@ class Controller:
         if not file:
             return
         
+        #Using OpenFileDialog, Open the JSON file that contains MissionData
         try:
 
             with open(file, "r") as f:
              Json_Raw=f.read()
             mission_data=json.loads(Json_Raw)
 
+        #Invalid json, through Status error on GUI
         except json.JSONDecodeError:
             self.__view.StatusLbl.config(text="invalid Json Format")
             return
@@ -87,7 +89,7 @@ class Controller:
         key=os.path.splitext(filename)[0]
 
         redis_key=f"{key}"
-
+        #Send Redis key Data taken from Json Data to MODEL. 
         self.__model.setmission(redis_key,mission_data)
 
         self.__view.StatusLbl.config(text=f"Imported Mission Succesfully:{redis_key}")
@@ -109,6 +111,7 @@ class Controller:
         textbox.insert(tk.END,reportText)
 
         self.__view.StatusLbl.config(text=f"Status: Mission Report generated {mission_Key}")
+
     #Update Status of Redis DB and API depending On match cases
     def update_status(self):
         stat = self.__model.health()   
