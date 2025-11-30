@@ -1,9 +1,0 @@
-[SUCCESS]2025-11-30 02:30:11.413674: Redis Initialized 
-[SUCCESS]2025-11-30 02:30:12.003117: Health Check: Connection to API and DB is Good 
-[SUCCESS]2025-11-30 02:30:13.423433: Mission Returned Succesfully:['Mission1', 'Mission2'] 
-[SUCCESS]2025-11-30 02:30:15.013342: Generating Mission Report:Mission1 
-[SUCCESS]2025-11-30 02:30:53.486188: Redis Initialized 
-[SUCCESS]2025-11-30 02:30:53.973944: Health Check: Connection to API and DB is Good 
-[SUCCESS]2025-11-30 02:30:54.978803: Mission Returned Succesfully:['Mission1', 'Mission2'] 
-[SUCCESS]2025-11-30 02:30:56.289468: Generating Mission Report:Mission1 
-[SUCCESS]2025-11-30 02:30:56.421583: Retrieved 'Mission1' Mission Data 

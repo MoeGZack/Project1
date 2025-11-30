@@ -30,7 +30,6 @@ class App():
         self.ors_Client = ors.Client(key=config["OpenRouteAPI"]["api_key"])
 
         # Setup Logging
-        #self.loggers=None
         self.loggersCritical=None
         self.loggersSuccess=None
         self.loggersDebug=None
@@ -47,20 +46,7 @@ class App():
             self.log_filename=config["Logging"]["log_filename"]
             self.loggersCritical=Crtical(self.loggersCritical,self.log_filename)     
 
-        #Fle Logger Wraps Console Logger
-      #  if config["Logging"]["Debug"]=="true":
-      #      self.log_filename=config["Logging"]["log_filename"]
-      #      self.loggers=Success(self.loggers,self.log_filename) 
-
-      #  if config["Logging"]["Success"]=="true":
-      #      self.log_filename=config["Logging"]["log_filename"]
-      #      self.loggers=Debug(self.loggers,self.log_filename) 
-
-       # if config["Logging"]["Crtical"]=="true":
-      #      self.log_filename=config["Logging"]["log_filename"]
-      #      self.loggers=Crtical(self.loggers,self.log_filename) 
-    
-
+    #Logging Chain of Responsibility
     def logSucess(self,Info):
         if self.loggersSuccess is None:
             return
@@ -74,7 +60,6 @@ class App():
         else :
             self.loggersCritical.logging(Info)
 
-        
     def logDebug(self,Info):
         if self.loggersDebug is None:
             return
