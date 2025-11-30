@@ -10,7 +10,7 @@ class MissionReport:
 
 
     def create_report(self, mission_key):
-        App().logging("Generating Mission Report:"+str(mission_key))
+        App().logSucess("Generating Mission Report:"+str(mission_key))
         mission_data = self.model.get_mission_data(mission_key)
         if not mission_data:
             return "No data found for the selected mission."

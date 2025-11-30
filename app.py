@@ -24,27 +24,62 @@ class App():
             port=config["Database"]["port"],
             password=config["Database"]["password"],
             decode_responses=True)
-     # Test the connection
-        self.redis_client.ping()
-        
-
+    
+    
         #Retrieve API 
         self.ors_Client = ors.Client(key=config["OpenRouteAPI"]["api_key"])
+
         # Setup Logging
-        self.loggers=None
-        #Fle Logger Wraps Console Logger
-        if config["Logging"]["file"]=="true":
+        #self.loggers=None
+        self.loggersCritical=None
+        self.loggersSuccess=None
+        self.loggersDebug=None
+
+        if config["Logging"]["Debug"]=="true":
             self.log_filename=config["Logging"]["log_filename"]
-            self.loggers=FileLogger(self.loggers,self.log_filename) 
+            self.loggersDebug=Debug(self.loggersDebug,self.log_filename) 
+
+        if config["Logging"]["Success"]=="true":
+            self.log_filename=config["Logging"]["log_filename"]
+            self.loggersSuccess=Success(self.loggersSuccess,self.log_filename) 
+
+        if config["Logging"]["Crtical"]=="true":
+            self.log_filename=config["Logging"]["log_filename"]
+            self.loggersCritical=Crtical(self.loggersCritical,self.log_filename)     
+
+        #Fle Logger Wraps Console Logger
+      #  if config["Logging"]["Debug"]=="true":
+      #      self.log_filename=config["Logging"]["log_filename"]
+      #      self.loggers=Success(self.loggers,self.log_filename) 
+
+      #  if config["Logging"]["Success"]=="true":
+      #      self.log_filename=config["Logging"]["log_filename"]
+      #      self.loggers=Debug(self.loggers,self.log_filename) 
+
+       # if config["Logging"]["Crtical"]=="true":
+      #      self.log_filename=config["Logging"]["log_filename"]
+      #      self.loggers=Crtical(self.loggers,self.log_filename) 
     
 
-    def logging(self,Info):
-        if self.loggers is None:
+    def logSucess(self,Info):
+        if self.loggersSuccess is None:
             return
         else:
-            self.loggers.logging(Info)
-            
-    
+            self.loggersSuccess.logging(Info)
+
+    def logCritical(self,Info):
+
+        if self.loggersCritical is None:
+            return
+        else :
+            self.loggersCritical.logging(Info)
+
+        
+    def logDebug(self,Info):
+        if self.loggersDebug is None:
+            return
+        else:
+            self.loggersDebug.logging(Info)
 
     
                
