@@ -2,21 +2,26 @@ from app import *
 from Missionreport import *
 import tkinter as tk
 from tkinter import ttk
-
+from tkinter import filedialog
+import json
+import os
 class View:
 
     def PythonGUI(self):
-
+        #MAIN Window Setup
         self.root = tk.Tk()
         self.root.title("Mission Control")
-        self.root.geometry("700x450")
+        self.root.geometry("800x420")
 
-
+        #Title Page for GUI
         self.missionLbl = ttk.Label(self.root, text="Mission Control Panel", font=("Helvetica", 16))
         self.missionLbl.place(x=225, y=10)
 
+        #Button For Controls
         self.RetrieveMissionbtn = ttk.Button(self.root, text="Retrieve Missions")
         self.RetrieveMissionbtn.place(x=50, y=50)
+        self.importMissionbtn=ttk.Button(self.root, text="Import Missions")
+        self.importMissionbtn.place(x=200, y=50)
         self.GenerateBtn = ttk.Button(self.root, text="Generate Report")
         self.GenerateBtn.place(x=375, y=50)
        
@@ -27,21 +32,23 @@ class View:
 
         ttk.Label(self.root, text="Mission Report:").place(x=375, y=100)
 
-        self.MissionReport= tk.Text(self.root, height=12,width=50)
+        self.MissionReport= tk.Text(self.root, height=12,width=50,wrap=tk.WORD)
         self.MissionReport.place(x=375, y=130)
        
         self.StatusLbl = ttk.Label(self.root, text="Status: —")
-        self.StatusLbl.place(x=50, y=400)
+        self.StatusLbl.place(x=50, y=380)
+
 class Controller:
     def __init__(self, view, model):
         self.__view = view
         self.__model = model
+        self.__report=MissionReport(self.__model)
     
-        
     def run(self):
         self.__view.PythonGUI()
         self.__view.RetrieveMissionbtn.config(command=self.generate_MissionList)
         self.__view.GenerateBtn.config(command=self.generate_Report)
+        self.__view.importMissionbtn.config(command=self.import_Missions)
         self.update_status()
         self.__view.root.mainloop()   
     
@@ -59,6 +66,35 @@ class Controller:
             n.insert(tk.END, key)
         self.__view.StatusLbl.config(text=f"Status: Retrieved {len(keys)} Missions.")
 
+    def import_Missions(self):
+        file=filedialog.askopenfilename()
+
+        
+
+        if not file:
+             
+            return
+        
+        try:
+
+            with open(file, "r") as f:
+             Json_Raw=f.read()
+            mission_data=json.loads(Json_Raw)
+
+        except json.JSONDecodeError:
+            self.__view.StatusLbl.config(text="invalid Json Format")
+            return
+
+        filename=os.path.basename(file)
+        key=os.path.splitext(filename)[0]
+
+        redis_key=f"{key}"
+
+        self.__model.setmission(redis_key,mission_data)
+
+        self.__view.StatusLbl.config(text=f"Imported Mission Succesfully:{redis_key}")
+
+        
     def generate_Report(self):
         Selection=self.__view.MissionList.curselection()
 
@@ -66,9 +102,14 @@ class Controller:
             self.__view.StatusLbl.config(text="Status: Please Select Mission.")
             return
         
-        MissionKey=self.__view.MissionList.get(Selection[0])
+        mission_Key=self.__view.MissionList.get(Selection[0])
 
-        self.__view.StatusLbl.config(text=f"Status: Mission Report generated {MissionKey}")
+        reportText=self.__report.generate_report(mission_Key)
+        textbox=self.__view.MissionReport
+        textbox.delete(1.0, tk.END)
+        textbox.insert(tk.END,reportText)
+
+        self.__view.StatusLbl.config(text=f"Status: Mission Report generated {mission_Key}")
 
     def update_status(self):
         stat = self.__model.health()   
@@ -105,6 +146,11 @@ class Model:
             "start_coords":[n1["x"],n1["y"]],
             "end_coords":[n2["x"],n2["y"]],
         }
+    def setmission(self,key,mission_data):
+        self.redis.json().set(key,"$",mission_data)
+
+        return
+    
     def health(self):
         db_ok=True
         api_ok=True
