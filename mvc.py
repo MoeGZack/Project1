@@ -83,6 +83,7 @@ class Controller:
         #Invalid json, through Status error on GUI
         except json.JSONDecodeError:
             self.__view.StatusLbl.config(text="invalid Json Format")
+            App().logging("User attemped to Load Invalid JSON")
             return
 
         filename=os.path.basename(file)
@@ -105,7 +106,7 @@ class Controller:
         
         mission_Key=self.__view.MissionList.get(Selection[0])
 
-        reportText=self.__report.generate_report(mission_Key)
+        reportText=self.__report.create_report(mission_Key)
         textbox=self.__view.MissionReport
         textbox.delete(1.0, tk.END)
         textbox.insert(tk.END,reportText)

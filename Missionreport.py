@@ -1,5 +1,7 @@
 from app import *
-
+### API call using OpenRouteService
+### Mission Report used to calculate Route Distance and time in a Mission
+### Output is Sent to View
 class MissionReport:
     def __init__(self, model):
         self.model = model
@@ -7,7 +9,7 @@ class MissionReport:
         self.client = self.app.ors_Client
 
 
-    def generate_report(self, mission_key):
+    def create_report(self, mission_key):
         App().logging("Generating Mission Report:"+str(mission_key))
         mission_data = self.model.get_mission_data(mission_key)
         if not mission_data:
@@ -23,8 +25,10 @@ class MissionReport:
             validate=False,
         )
 
-        duration=matrix['durations'][0][1]  # Duration from start to end
-        distance=matrix['distances'][0][1]  # Distance from start to end
+        #OpenSource returns a full distanc matrix for all coordiante pairs
+        #We Make our Mission nodes by 2 coordinates. ORS returns a 2x2
+        duration=matrix['durations'][0][1]  
+        distance=matrix['distances'][0][1]  
 
         #Mission Report Structure
         Report=[
