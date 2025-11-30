@@ -8,17 +8,21 @@ class Logger(ABC):
         pass
 
     def logging(self, info):
+        
         self.log_entry(info)
 
-        if (self.__loggerNext ==None):
+        if (self.logger_Next ==None):
             return
         else:
-            self.__loggerNext.log(info)
+            self.logger_Next.log(info)
+
+    def __init__(self,_logger_Next):
+        self.logger_Next = _logger_Next
 
 class FileLogger(Logger):
-    def __init__(self,__loggerNext,__logfilename):
-        self.__logfile=open(__logfilename, "w")
-        super().__init__(__loggerNext)
+    def __init__(self,_logger_Next,log_filename):
+        self.__logfile=open(log_filename, "a+")
+        super().__init__(_logger_Next)
 
     def log_entry(self, info):
        self.__logfile.write(str(datetime.datetime.now()) + ": " + info \
@@ -30,8 +34,8 @@ class ConsoleLogger(Logger):
 
 class DatabaseLogger(Logger):
 
-    def __init__(self, __loggerNext,redis_client):
+    def __init__(self, _logger_Next,redis_client):
         self.__redis_client=redis_client
-        super().__init__(__loggerNext)
+        super().__init__(_logger_Next)
     def log_entry(self, info):
         self.__redis_client.hset("logger",str(datetime.datetime.now()),info)

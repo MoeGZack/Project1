@@ -1,0 +1,5 @@
+2025-11-29 22:23:31.482925: Redis Initialized
+2025-11-29 22:23:31.644461: Health check: Connection to DB and API is healthy
+2025-11-29 22:23:32.582845: Mission Returned Succesfully:{keys}
+2025-11-29 22:23:34.707490: Generating Mission ReportMission1
+2025-11-29 22:23:34.811422: Retrieved 'Mission1' Mission Data

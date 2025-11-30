@@ -69,10 +69,7 @@ class Controller:
     def import_Missions(self):
         file=filedialog.askopenfilename()
 
-        
-
         if not file:
-             
             return
         
         try:
@@ -131,14 +128,19 @@ class Model:
     def __init__(self):
         self.app=App()
         self.redis=self.app.redis_client
+        App().logging("Redis Initialized")
 
     def list_mission_keys(self):
-        return list(self.redis.keys(match="Mission:*"))
-    
+        keys= list(self.redis.keys(match="Mission:*"))
+        App().logging("Mission Returned Succesfully:{keys}")
+        return keys
+
     def get_mission_data(self, key):
         mission=self.redis.json().get(key)
         if not mission:
+            App().logging(f"Mission '{key}' not found")
             return None
+        App().logging(f"Retrieved '{key}' Mission Data")
         n1=mission["nodes"][0]
         n2=mission["nodes"][1]
 
@@ -146,11 +148,14 @@ class Model:
             "start_coords":[n1["x"],n1["y"]],
             "end_coords":[n2["x"],n2["y"]],
         }
+    
+
     def setmission(self,key,mission_data):
         self.redis.json().set(key,"$",mission_data)
-
+        App().logging("Mission Data Imported")
         return
     
+
     def health(self):
         db_ok=True
         api_ok=True
@@ -158,7 +163,8 @@ class Model:
             self.redis.ping()
         except redis.exceptions.ConnectionError:
             db_ok=False
-        api_ok=getattr(self.app,"ors_Client")  
+        api_ok=getattr(self.app,"ors_Client")
+        App().logging("Health check: Connection to DB and API is healthy")  
         return{"db_ok":db_ok,"api_ok":api_ok}
     
     

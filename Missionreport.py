@@ -8,6 +8,7 @@ class MissionReport:
 
 
     def generate_report(self, mission_key):
+        App().logging("Generating Mission Report"+str(mission_key))
         mission_data = self.model.get_mission_data(mission_key)
         if not mission_data:
             return "No data found for the selected mission."
@@ -22,9 +23,6 @@ class MissionReport:
             validate=False,
         )
 
-        #duration="Durations in secs: {}\n".format(matrix['durations'])
-        #distance="Distances in m: {}".format(matrix['distances'])
-
         duration=matrix['durations'][0][1]  # Duration from start to end
         distance=matrix['distances'][0][1]  # Distance from start to end
 
@@ -37,4 +35,5 @@ class MissionReport:
             f"Distance: {distance:.2f}m\n",
             f"Duration: {duration:.2f}s\n"
         ]
+        
         return Report

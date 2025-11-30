@@ -1,5 +1,0 @@
-from mvc import *
-
-
-controller = Controller(View(), Model())
-controller.run()
