@@ -137,7 +137,7 @@ class Model:
 
     def list_mission_keys(self):
         keys= list(self.redis.keys(match="Mission:*"))
-        App().logging("Mission Returned Succesfully:{keys}")
+        App().logging(f"Mission Returned Succesfully:{keys}")
         return keys
 
     #Retrieve Mission data within Json key in Redis
@@ -163,16 +163,22 @@ class Model:
     
     #Check Health Status for API and Redis Connection
     def health(self):
-        db_ok=True
-        api_ok=True
+        
         try:
             self.redis.ping()
+            db_ok=True
         except redis.exceptions.ConnectionError:
             db_ok=False
-        api_ok=getattr(self.app,"ors_Client")
-        App().logging("Health check: Connection to DB and API is healthy")  
+            App().logging("Health check: Connection to DB is No Good")  
+
+        api_ok=self.app.ors_Client is not None
+        if not api_ok:
+            App().logging("Health check: Connection to API is No Good")
+               
+        if db_ok and api_ok:
+                App().logging("Health Check: Connection to API and DB is Good")
         return{"db_ok":db_ok,"api_ok":api_ok}
-    
+        
     
 
     
